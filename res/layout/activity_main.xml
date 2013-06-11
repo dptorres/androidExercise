@@ -1,0 +1,117 @@
+	<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="441dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".MainActivity" >
+
+       <TextView
+            android:id="@+id/nameLabelField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:text="@string/nameLabel" />
+
+        <EditText
+            android:id="@+id/nameField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/nameLabelField"
+            android:layout_below="@+id/nameLabelField"
+            android:ems="10"
+            android:inputType="textPersonName" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/employeeLabelField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/nameField"
+            android:layout_below="@+id/nameField"
+            android:layout_marginTop="16dp"
+            android:text="@string/employeeLabel" />
+
+        <TextView
+            android:id="@+id/emailLabelField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/employeeSpinner"
+            android:layout_below="@+id/employeeSpinner"
+            android:layout_marginTop="16dp"
+            android:text="@string/emailLabel" />
+
+        <Spinner
+            android:id="@+id/employeeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/employeeLabelField"
+            android:layout_marginTop="16dp" />
+        
+        <EditText
+            android:id="@+id/emailField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/emailLabelField"
+            android:layout_below="@+id/emailLabelField"
+            android:ems="10"
+            android:inputType="textEmailAddress" />
+        
+        <TextView
+            android:id="@+id/cellNumLabelField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/emailField"
+            android:layout_below="@+id/emailField"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:text="@string/cellNumLabel" />
+
+        <EditText
+            android:id="@+id/cellNumField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/cellNumLabelField"
+            android:layout_below="@+id/cellNumLabelField"
+            android:ems="10"
+            android:inputType="number" />
+        
+        <TextView
+            android:id="@+id/birthLabelField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/cellNumField"
+            android:layout_below="@+id/cellNumField"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:text="@string/birthLabel" />
+
+        <DatePicker
+            android:id="@+id/dpBirthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/birthLabelField"
+            android:layout_below="@+id/birthLabelField"
+            android:calendarViewShown="false" />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dpBirthday"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/submitButton" />
+
+    </RelativeLayout>
+
+</ScrollView>
