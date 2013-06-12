@@ -44,7 +44,7 @@ public class MainActivity extends FragmentActivity{
         ActionBar.TabListener tabListener = createTabListener();
         actionBar.addTab(actionBar.newTab().setText("Add Employee").setTabListener(tabListener));
         actionBar.addTab(actionBar.newTab().setText("View Employees").setTabListener(tabListener));
-        
+          
     }
 
 	private OnPageChangeListener createPageChangeListener() {
