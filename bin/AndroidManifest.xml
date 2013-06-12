@@ -22,12 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.tryapp.activity.ViewContactsActivity"
-            android:label="@string/title_activity_view_contacts"
-            android:parentActivityName="com.example.tryapp.MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.tryapp.MainActivity" />
-        </activity>
     </application>
 
 </manifest>
