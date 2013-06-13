@@ -12,7 +12,8 @@ public class DatabaseAdapter {
 	
 	private DatabaseHelper dbHelper;
 	private SQLiteDatabase sqlDB;
-	private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_EMAIL, DatabaseHelper.COLUMN_CELLNUM, DatabaseHelper.COLUMN_BIRTHDAY};
+	private String[] allColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_EMAIL, 
+								   DatabaseHelper.COLUMN_CELLNUM, DatabaseHelper.COLUMN_BIRTHDAY, DatabaseHelper.COLUMN_INCOME};
 	
 	private Context context;
 	
@@ -41,6 +42,7 @@ public class DatabaseAdapter {
 	    values.put(DatabaseHelper.COLUMN_EMAIL, data.getEadd());
 	    values.put(DatabaseHelper.COLUMN_CELLNUM, data.getCellNum());
 	    values.put(DatabaseHelper.COLUMN_BIRTHDAY, data.getBirthday());
+	    values.put(DatabaseHelper.COLUMN_INCOME, data.getIncome());
 	    return sqlDB.insert(DatabaseHelper.TABLE_DATA, null, values);
 	}
 	

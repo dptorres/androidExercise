@@ -35,11 +35,13 @@ public class ContactsAdapter extends CursorAdapter {
 		TextView eaddRow = (TextView) rowView.findViewById(R.id.eadd);
 		TextView cellNumRow = (TextView) rowView.findViewById(R.id.cellnum);
 		TextView birthdayRow = (TextView) rowView.findViewById(R.id.birthday);
+		TextView incomeRow = (TextView) rowView.findViewById(R.id.income);
 		
 		nameRow.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
 		eaddRow.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_EMAIL)));
 		cellNumRow.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_CELLNUM)));
 		birthdayRow.setText(cursor.getString(cursor.getColumnIndex(DatabaseHelper.COLUMN_BIRTHDAY)));
+		incomeRow.setText(String.valueOf(cursor.getDouble(cursor.getColumnIndex(DatabaseHelper.COLUMN_INCOME))));
 	}
 	
 }

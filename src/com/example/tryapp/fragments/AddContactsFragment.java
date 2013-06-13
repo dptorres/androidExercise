@@ -5,6 +5,7 @@ import java.util.Calendar;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,8 +15,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-
-import android.support.v4.app.Fragment;
 
 import com.example.tryapp.R;
 import com.example.tryapp.object.Employee;
@@ -50,6 +49,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
     											  android.R.layout.simple_spinner_item); 	//getActivity().getApplicationContext();
     	spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	empSpinner.setAdapter(spinAdapter);
+    	
 	}
 
 	private void initDatePicker() {
@@ -76,7 +76,8 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		cellNumField = (EditText) view.findViewById(R.id.cellNumField);
 //		empSpinner.getSelectedItem();
 		
-		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText().toString(), getDate());
+		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
+						   cellNumField.getText().toString(), getDate(), computeIncome());
 		
 		clearEditText();
 		
@@ -87,6 +88,20 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		
 	}
 
+	private Double computeIncome() {
+		
+		if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
+			return (double) 20000;
+		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
+			return (double) 10000;		//how to get hours? days?
+		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
+			return (double) 25000;
+		} else {
+			return (double) 30000;
+		}
+		
+	}
+	
 	private void clearEditText() {
 		nameField.setText("");
 		emailField.setText("");
@@ -97,5 +112,5 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	@SuppressLint("NewApi") private String getDate() {
 		return DateFormat.getDateInstance().format(dpBirth.getCalendarView().getDate());
 	}
-	
+
 }

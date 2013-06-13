@@ -7,6 +7,7 @@ public class Employee {
 	private String eadd;
 	private String cellnum;
 	private String birthday;
+	private Double income;
 	
 	public Employee(int id, String name, String eadd, String cellnum, String birthday){
 		this.id = id;
@@ -16,11 +17,12 @@ public class Employee {
 		this.birthday = birthday;
 	}
 	
-	public Employee(String name, String eadd, String cellnum, String birthday){
+	public Employee(String name, String eadd, String cellnum, String birthday, Double income){
 		this.name = name;
 		this.eadd = eadd;
 		this.cellnum = cellnum;
 		this.birthday = birthday;
+		this.income = income;
 	}
 	
 	public int getID() {
@@ -43,6 +45,10 @@ public class Employee {
 		return birthday;
 	}
 	
+	public Double getIncome() {
+		return income;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -57,6 +63,10 @@ public class Employee {
 	
 	public void setBirthday(String birthday){
 		this.birthday = birthday;
+	}
+	
+	public void setIncome(Double income) {
+		this.income = income;
 	}
 	
 }

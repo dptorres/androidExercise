@@ -12,7 +12,7 @@ import com.example.tryapp.R;
 import com.example.tryapp.sqlite.DatabaseAdapter;
 import com.example.tryapp.ui.ContactsAdapter;
 
-public class ViewContactsFragment extends Fragment {
+public class ViewContactsFragment extends Fragment{
 	
 	private DatabaseAdapter dbAdapter;
 	private View view;
@@ -37,5 +37,5 @@ public class ViewContactsFragment extends Fragment {
 		return cursor;
 		
 	}
-
+	
 }

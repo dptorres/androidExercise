@@ -48,12 +48,14 @@ public class MainActivity extends FragmentActivity{
     }
 
 	private OnPageChangeListener createPageChangeListener() {
+		
 		ViewPager.SimpleOnPageChangeListener pageListener = new ViewPager.SimpleOnPageChangeListener() {
 
 			@SuppressLint("NewApi")
 			@Override
 			public void onPageSelected(int position) {
 				getActionBar().setSelectedNavigationItem(position);
+				pageAdapter.notifyDataSetChanged();
 			}
 			
 		};
@@ -76,7 +78,7 @@ public class MainActivity extends FragmentActivity{
 			
 			@Override
 			public void onTabReselected(Tab tab, FragmentTransaction ft) {
-				
+
 			}
 		};
 		return tabListener;
