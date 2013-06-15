@@ -17,6 +17,9 @@
     <string name="hourEmp">Hourly Employee</string>
     <string name="executive">Executive</string>
     <string name="shareholder">Shareholder</string>
+    <string name="wage">Hourly Wage</string>
+    <string name="hours">Hours per month</string>
+    <string name="bonus">Bonus</string>
     
     <string-array name="employee_type">
         <item >@string/trainee</item>

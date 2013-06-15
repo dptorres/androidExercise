@@ -4,17 +4,26 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tryapp.R;
 import com.example.tryapp.object.Employee;
@@ -23,23 +32,28 @@ import com.example.tryapp.sqlite.DatabaseAdapter;
 public class AddContactsFragment extends Fragment implements OnClickListener{
 	
 	private View view;
+	private RelativeLayout addContactsView;
 	private DatabaseAdapter dbAdapter;
 	private DatePicker dpBirth;
 	private EditText nameField;
 	private EditText emailField;
 	private EditText cellNumField;
+	private EditText wage;
+	private EditText hours;
 	private Spinner empSpinner;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_add_contacts, container, false);
 		
+		addContactsView = (RelativeLayout) view.findViewById(R.id.addFileds);
+		
 		initDatePicker();
         initSpinner();
         
         Button submitBtn = (Button) view.findViewById(R.id.submitButton);
     	submitBtn.setOnClickListener(this);
-		
+    	
 		return view;
 	}
 	
@@ -50,6 +64,47 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
     	spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	empSpinner.setAdapter(spinAdapter);
     	
+    	empSpinner.setOnItemSelectedListener(spinnerListener());
+    	
+	}
+
+	private OnItemSelectedListener spinnerListener() {
+		OnItemSelectedListener selected = new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+				if(pos == 0) {
+					addContactsView.removeAllViews();
+				} else if(pos == 1) {
+					inflateHoursField();
+				} else if(pos == 2) {
+					inflateBonusField();
+				} else if(pos == 3) {
+					addContactsView.removeAllViews();
+				}
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+				
+			}
+			
+		};
+		return selected;
+	}
+
+	protected void inflateBonusField() {
+		final View bonusView = LayoutInflater.from(getActivity()).inflate(R.layout.executive, null);
+		
+		addContactsView.addView(bonusView);
+	}
+
+	protected void inflateHoursField() {
+		final View hoursView = LayoutInflater.from(getActivity()).inflate(R.layout.hourly_employee, null);
+		
+		wage = (EditText) hoursView.findViewById(R.id.wageField);
+		hours = (EditText) hoursView.findViewById(R.id.hoursField);
+		addContactsView.addView(hoursView);
 	}
 
 	private void initDatePicker() {
@@ -74,7 +129,6 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		nameField = (EditText) view.findViewById(R.id.nameField);
 		emailField = (EditText) view.findViewById(R.id.emailField);
 		cellNumField = (EditText) view.findViewById(R.id.cellNumField);
-//		empSpinner.getSelectedItem();
 		
 		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
 						   cellNumField.getText().toString(), getDate(), computeIncome());
@@ -93,7 +147,9 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
 			return (double) 20000;
 		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
-			return (double) 10000;		//how to get hours? days?
+			double doubleWage = Double.parseDouble(wage.getText().toString());
+			int intHours = Integer.parseInt(hours.getText().toString()); 
+			return (double) (doubleWage * intHours);
 		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
 			return (double) 25000;
 		} else {
