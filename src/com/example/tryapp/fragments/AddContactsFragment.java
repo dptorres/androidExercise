@@ -34,7 +34,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	
 	private View view;
 	private RelativeLayout addContactsView;
-	private DatabaseAdapter dbAdapter;
+//	private DatabaseAdapter dbAdapter;
 	private DatePicker dpBirth;
 	private EditText nameField;
 	private EditText emailField;
@@ -42,7 +42,6 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	private EditText wage;
 	private EditText hours;
 	private Spinner empSpinner;
-	private TextView bonusField;
 	private SeekBar bonusBar;
 
 	@Override
@@ -63,7 +62,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	private void initSpinner() {
 		empSpinner = (Spinner) view.findViewById(R.id.employeeSpinner);
     	ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter.createFromResource(this.getActivity(), R.array.employee_type, 
-    											  android.R.layout.simple_spinner_item); 	//getActivity().getApplicationContext();
+    											  android.R.layout.simple_spinner_item); 	
     	spinAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     	empSpinner.setAdapter(spinAdapter);
     	
@@ -111,7 +110,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	}
 
 	private OnSeekBarChangeListener seekBarListener(View bonusView) {
-		bonusField = (TextView) bonusView.findViewById(R.id.bonusLabelField);
+		final TextView bonusField = (TextView) bonusView.findViewById(R.id.bonusLabelField);
 		
 		OnSeekBarChangeListener seekBar = new OnSeekBarChangeListener() {
 			
@@ -157,7 +156,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		insertToDatabase();
-		//refreshFields();
+		refreshFields();
 	}
 
 	private void insertToDatabase() {
@@ -165,56 +164,90 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		emailField = (EditText) view.findViewById(R.id.emailField);
 		cellNumField = (EditText) view.findViewById(R.id.cellNumField);
 		
-		dbAdapter = new DatabaseAdapter(this.getActivity());
+		DatabaseAdapter dbAdapter = new DatabaseAdapter(this.getActivity());
 		dbAdapter.openToWrite();
 		
 		if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
 			
-			Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
-					   		cellNumField.getText().toString(), getDate(), 20000);
-			
-			dbAdapter.insertToTrainee(contact);
+			insertTraineeToDB(dbAdapter);
+			updateIncome(dbAdapter);
 			
 		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
 			
-			double doubleWage = Double.parseDouble(wage.getText().toString());
-			int intHours = Integer.parseInt(hours.getText().toString()); 
-			
-			HourlyEmployee contact = new HourlyEmployee(nameField.getText().toString(), emailField.getText().toString(),
-							cellNumField.getText().toString(), getDate(), (doubleWage * intHours) , doubleWage, intHours);
-			
-			dbAdapter.insertToHourlyEmployee(contact);
+			insertHourlyEmpToDB(dbAdapter);
+			updateIncome(dbAdapter);
 			
 		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
-			double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome();
-			double income = bonus + 20000;
-			
-			Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), 
-					   		cellNumField.getText().toString(), getDate(), income, bonusBar.getProgress(), 0);
-			
-			dbAdapter.insertToExecutive(contact);
+			insertExecutiveToDB(dbAdapter);
 			
 		} else {
-			double bonus = (0.20 * getEmployeeIncome());
-			double income = bonus + 20000;
-			
-			Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), 
-			   		cellNumField.getText().toString(), getDate(), income, bonusBar.getProgress(), 1);
-	
-			dbAdapter.insertToExecutive(contact);
+			insertShareholderToDB(dbAdapter);
 			
 		}
-		
-		refreshFields();
 		
 		dbAdapter.close();
 		
 	}
 
-	private double getEmployeeIncome() {
+	private void insertShareholderToDB(DatabaseAdapter dbAdapter) {
+		double bonus = (0.20 * getEmployeeIncome(dbAdapter));
+		
+		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), 
+		   		cellNumField.getText().toString(), getDate(), bonus, 20, 1);
+
+		dbAdapter.insertToExecutive(contact);
+	}
+
+	private void insertExecutiveToDB(DatabaseAdapter dbAdapter) {
+		double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome(dbAdapter);
+		double income = bonus + 20000;
+		System.out.println("To be inserted: " + bonusBar.getProgress());
+		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), 
+				   		cellNumField.getText().toString(), getDate(), income, bonusBar.getProgress(), 0);
+		
+		dbAdapter.insertToExecutive(contact);
+	}
+
+	private void insertHourlyEmpToDB(DatabaseAdapter dbAdapter) {
+		double doubleWage = Double.parseDouble(wage.getText().toString());
+		int intHours = Integer.parseInt(hours.getText().toString()); 
+		
+		HourlyEmployee contact = new HourlyEmployee(nameField.getText().toString(), emailField.getText().toString(),
+						cellNumField.getText().toString(), getDate(), (doubleWage * intHours) , doubleWage, intHours);
+		
+		dbAdapter.insertToHourlyEmployee(contact);
+	}
+
+	private void insertTraineeToDB(DatabaseAdapter dbAdapter) {
+		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
+				   		cellNumField.getText().toString(), getDate(), 20000);
+		
+		dbAdapter.insertToTrainee(contact);
+	}
+
+	private void updateIncome(DatabaseAdapter dbAdapter) {
+		
+		Cursor bonusPercent = dbAdapter.getBonusPercentage();
+		bonusPercent.moveToFirst();
+		
+		while(!bonusPercent.isAfterLast()) {
+			double income = 0;
+			double bonus = getEmployeeIncome(dbAdapter) * (double)bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_BONUS)) / 100;
+			if(bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_TYPE)) == 0) {
+				income = bonus + 20000;
+			} else {
+				income = bonus;
+			}
+			
+			dbAdapter.updateIncome(income, bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_ID)));
+			
+			bonusPercent.moveToNext();
+		}
+		
+	}
+
+	private double getEmployeeIncome(DatabaseAdapter dbAdapter) {
 		double dIncome = 0;
-		dbAdapter.close();
-		dbAdapter.openToRead();
 		
 		Cursor traineeIncome = dbAdapter.getTraineeIncome();
 		traineeIncome.moveToFirst();
@@ -238,8 +271,6 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		nameField.setText("");
 		emailField.setText("");
 		cellNumField.setText("");
-//		bonusBar.setProgress(0);
-//		bonusField.setText("0%");
 		empSpinner.setSelection(0);
 		initDatePicker();
 	}

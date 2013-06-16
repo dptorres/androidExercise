@@ -72,6 +72,12 @@ public class DatabaseAdapter {
 	    return sqlDB.insert(DatabaseHelper.EXECUTIVE_DATA, null, values);
 	}
 	
+	public void updateIncome(double income, int id) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.COLUMN_INCOME, income);
+		sqlDB.update(DatabaseHelper.EXECUTIVE_DATA, values, DatabaseHelper.COLUMN_ID + "=" + id, null);
+	}
+	
 	public Cursor getTrainee() {
 	    return sqlDB.query(DatabaseHelper.TRAINEE_DATA, allColumns, null, null, null, null, null);
 	}
@@ -91,5 +97,11 @@ public class DatabaseAdapter {
 	public Cursor getHourlyEmpIcome() {
 		return sqlDB.query(DatabaseHelper.HOURLY_EMP_DATA, new String[] {DatabaseHelper.COLUMN_INCOME}, null, null, null, null, null);
 	}
+
+	public Cursor getBonusPercentage() {
+		return sqlDB.query(DatabaseHelper.EXECUTIVE_DATA, new String[] {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_BONUS, 
+						   DatabaseHelper.COLUMN_TYPE},null, null, null, null, null);
+	}
+
 	
 }
