@@ -1,6 +1,7 @@
 package com.example.tryapp.fragments;
 
 import android.database.Cursor;
+import android.database.MergeCursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,7 +17,8 @@ public class ViewContactsFragment extends Fragment{
 	
 	private DatabaseAdapter dbAdapter;
 	private View view;
-
+	private Cursor[] cursors;
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_view_contacts, container, false);
@@ -30,11 +32,18 @@ public class ViewContactsFragment extends Fragment{
 	}
 	
 	private Cursor readContent() {
+		cursors = new Cursor[3];
 		dbAdapter = new DatabaseAdapter(this.getActivity());
 		dbAdapter.openToRead();
-		Cursor cursor = dbAdapter.getAllContacts();
-		cursor.moveToFirst();
-		return cursor;
+		
+		cursors[0] = dbAdapter.getTrainee();
+		cursors[1] = dbAdapter.getHourlyEmployee();
+		cursors[2] = dbAdapter.getExecutive();
+		
+		Cursor merged = new MergeCursor(cursors);
+		merged.moveToFirst();
+		
+		return merged;
 		
 	}
 	

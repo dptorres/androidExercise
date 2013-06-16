@@ -7,17 +7,18 @@ public class Employee {
 	private String eadd;
 	private String cellnum;
 	private String birthday;
-	private Double income;
+	private double income;
 	
-	public Employee(int id, String name, String eadd, String cellnum, String birthday){
+	public Employee(int id, String name, String eadd, String cellnum, String birthday, double income){
 		this.id = id;
 		this.name = name;
 		this.eadd = eadd;
 		this.cellnum = cellnum;
 		this.birthday = birthday;
+		this.income = income;
 	}
 	
-	public Employee(String name, String eadd, String cellnum, String birthday, Double income){
+	public Employee(String name, String eadd, String cellnum, String birthday, double income){
 		this.name = name;
 		this.eadd = eadd;
 		this.cellnum = cellnum;

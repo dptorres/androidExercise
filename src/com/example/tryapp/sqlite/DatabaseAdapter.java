@@ -1,6 +1,8 @@
 package com.example.tryapp.sqlite;
 
 import com.example.tryapp.object.Employee;
+import com.example.tryapp.object.Executive;
+import com.example.tryapp.object.HourlyEmployee;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -36,18 +38,58 @@ public class DatabaseAdapter {
 		dbHelper.close();
 	}
 	
-	public long insertContact(Employee data) {
+	public long insertToTrainee(Employee data) {
 	    ContentValues values = new ContentValues();
 	    values.put(DatabaseHelper.COLUMN_NAME, data.getName());
 	    values.put(DatabaseHelper.COLUMN_EMAIL, data.getEadd());
 	    values.put(DatabaseHelper.COLUMN_CELLNUM, data.getCellNum());
 	    values.put(DatabaseHelper.COLUMN_BIRTHDAY, data.getBirthday());
 	    values.put(DatabaseHelper.COLUMN_INCOME, data.getIncome());
-	    return sqlDB.insert(DatabaseHelper.TABLE_DATA, null, values);
+	    return sqlDB.insert(DatabaseHelper.TRAINEE_DATA, null, values);
 	}
 	
-	public Cursor getAllContacts() {
-	    return sqlDB.query(DatabaseHelper.TABLE_DATA, allColumns, null, null, null, null, null);
-	  }
+	public long insertToHourlyEmployee(HourlyEmployee data) {
+	    ContentValues values = new ContentValues();
+	    values.put(DatabaseHelper.COLUMN_NAME, data.getName());
+	    values.put(DatabaseHelper.COLUMN_EMAIL, data.getEadd());
+	    values.put(DatabaseHelper.COLUMN_CELLNUM, data.getCellNum());
+	    values.put(DatabaseHelper.COLUMN_BIRTHDAY, data.getBirthday());
+	    values.put(DatabaseHelper.COLUMN_INCOME, data.getIncome());
+	    values.put(DatabaseHelper.COLUMN_WAGE, data.getWage());
+	    values.put(DatabaseHelper.COLUMN_HOURS, data.getHours());
+	    return sqlDB.insert(DatabaseHelper.HOURLY_EMP_DATA, null, values);
+	}
+	
+	public long insertToExecutive(Executive data) {
+	    ContentValues values = new ContentValues();
+	    values.put(DatabaseHelper.COLUMN_NAME, data.getName());
+	    values.put(DatabaseHelper.COLUMN_EMAIL, data.getEadd());
+	    values.put(DatabaseHelper.COLUMN_CELLNUM, data.getCellNum());
+	    values.put(DatabaseHelper.COLUMN_BIRTHDAY, data.getBirthday());
+	    values.put(DatabaseHelper.COLUMN_INCOME, data.getIncome());
+	    values.put(DatabaseHelper.COLUMN_BONUS, data.getPercent());
+	    values.put(DatabaseHelper.COLUMN_TYPE, data.getType());
+	    return sqlDB.insert(DatabaseHelper.EXECUTIVE_DATA, null, values);
+	}
+	
+	public Cursor getTrainee() {
+	    return sqlDB.query(DatabaseHelper.TRAINEE_DATA, allColumns, null, null, null, null, null);
+	}
+	
+	public Cursor getHourlyEmployee() {
+		return sqlDB.query(DatabaseHelper.HOURLY_EMP_DATA, allColumns, null, null, null, null, null);
+	}
+	
+	public Cursor getExecutive() {
+		return sqlDB.query(DatabaseHelper.EXECUTIVE_DATA, allColumns, null, null, null, null, null);
+	}
+	
+	public Cursor getTraineeIncome() {
+		return sqlDB.query(DatabaseHelper.TRAINEE_DATA, new String[] {DatabaseHelper.COLUMN_INCOME}, null, null, null, null, null);
+	}
+	
+	public Cursor getHourlyEmpIcome() {
+		return sqlDB.query(DatabaseHelper.HOURLY_EMP_DATA, new String[] {DatabaseHelper.COLUMN_INCOME}, null, null, null, null, null);
+	}
 	
 }

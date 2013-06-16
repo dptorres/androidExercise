@@ -4,30 +4,31 @@ import java.text.DateFormat;
 import java.util.Calendar;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tryapp.R;
 import com.example.tryapp.object.Employee;
+import com.example.tryapp.object.Executive;
+import com.example.tryapp.object.HourlyEmployee;
 import com.example.tryapp.sqlite.DatabaseAdapter;
+import com.example.tryapp.sqlite.DatabaseHelper;
 
 public class AddContactsFragment extends Fragment implements OnClickListener{
 	
@@ -41,6 +42,8 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	private EditText wage;
 	private EditText hours;
 	private Spinner empSpinner;
+	private TextView bonusField;
+	private SeekBar bonusBar;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
     	
 	}
 
+	//inflate additional fields
 	private OnItemSelectedListener spinnerListener() {
 		OnItemSelectedListener selected = new OnItemSelectedListener() {
 
@@ -76,8 +80,10 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 				if(pos == 0) {
 					addContactsView.removeAllViews();
 				} else if(pos == 1) {
+					addContactsView.removeAllViews();
 					inflateHoursField();
 				} else if(pos == 2) {
+					addContactsView.removeAllViews();
 					inflateBonusField();
 				} else if(pos == 3) {
 					addContactsView.removeAllViews();
@@ -96,7 +102,34 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 	protected void inflateBonusField() {
 		final View bonusView = LayoutInflater.from(getActivity()).inflate(R.layout.executive, null);
 		
+		bonusBar = (SeekBar) bonusView.findViewById(R.id.bonusBar);
+		bonusBar.setIndeterminate(false);
+		
+		bonusBar.setOnSeekBarChangeListener(seekBarListener(bonusView));
+		
 		addContactsView.addView(bonusView);
+	}
+
+	private OnSeekBarChangeListener seekBarListener(View bonusView) {
+		bonusField = (TextView) bonusView.findViewById(R.id.bonusLabelField);
+		
+		OnSeekBarChangeListener seekBar = new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				bonusField.setText(progress + "%");
+			}
+		};
+		return seekBar;
 	}
 
 	protected void inflateHoursField() {
@@ -120,9 +153,11 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
         
 	}
 
+	//Submit button listener
 	@Override
 	public void onClick(View v) {
 		insertToDatabase();
+		//refreshFields();
 	}
 
 	private void insertToDatabase() {
@@ -130,38 +165,82 @@ public class AddContactsFragment extends Fragment implements OnClickListener{
 		emailField = (EditText) view.findViewById(R.id.emailField);
 		cellNumField = (EditText) view.findViewById(R.id.cellNumField);
 		
-		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
-						   cellNumField.getText().toString(), getDate(), computeIncome());
-		
-		clearEditText();
-		
 		dbAdapter = new DatabaseAdapter(this.getActivity());
 		dbAdapter.openToWrite();
-		dbAdapter.insertContact(contact);
+		
+		if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
+			
+			Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
+					   		cellNumField.getText().toString(), getDate(), 20000);
+			
+			dbAdapter.insertToTrainee(contact);
+			
+		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
+			
+			double doubleWage = Double.parseDouble(wage.getText().toString());
+			int intHours = Integer.parseInt(hours.getText().toString()); 
+			
+			HourlyEmployee contact = new HourlyEmployee(nameField.getText().toString(), emailField.getText().toString(),
+							cellNumField.getText().toString(), getDate(), (doubleWage * intHours) , doubleWage, intHours);
+			
+			dbAdapter.insertToHourlyEmployee(contact);
+			
+		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
+			double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome();
+			double income = bonus + 20000;
+			
+			Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), 
+					   		cellNumField.getText().toString(), getDate(), income, bonusBar.getProgress(), 0);
+			
+			dbAdapter.insertToExecutive(contact);
+			
+		} else {
+			double bonus = (0.20 * getEmployeeIncome());
+			double income = bonus + 20000;
+			
+			Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), 
+			   		cellNumField.getText().toString(), getDate(), income, bonusBar.getProgress(), 1);
+	
+			dbAdapter.insertToExecutive(contact);
+			
+		}
+		
+		refreshFields();
+		
 		dbAdapter.close();
 		
 	}
 
-	private Double computeIncome() {
+	private double getEmployeeIncome() {
+		double dIncome = 0;
+		dbAdapter.close();
+		dbAdapter.openToRead();
 		
-		if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
-			return (double) 20000;
-		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
-			double doubleWage = Double.parseDouble(wage.getText().toString());
-			int intHours = Integer.parseInt(hours.getText().toString()); 
-			return (double) (doubleWage * intHours);
-		} else if(empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
-			return (double) 25000;
-		} else {
-			return (double) 30000;
+		Cursor traineeIncome = dbAdapter.getTraineeIncome();
+		traineeIncome.moveToFirst();
+		
+		while(!traineeIncome.isAfterLast()) {		
+			dIncome = dIncome + traineeIncome.getDouble(traineeIncome.getColumnIndex(DatabaseHelper.COLUMN_INCOME));
+			traineeIncome.moveToNext();
 		}
 		
+		Cursor hourlyEmpIncome = dbAdapter.getHourlyEmpIcome();
+		hourlyEmpIncome.moveToFirst();
+		
+		while(!hourlyEmpIncome.isAfterLast()) {
+			dIncome = dIncome + hourlyEmpIncome.getDouble(hourlyEmpIncome.getColumnIndex(DatabaseHelper.COLUMN_INCOME));
+			hourlyEmpIncome.moveToNext();
+		}
+		return dIncome;
 	}
-	
-	private void clearEditText() {
+
+	private void refreshFields() {
 		nameField.setText("");
 		emailField.setText("");
 		cellNumField.setText("");
+//		bonusBar.setProgress(0);
+//		bonusField.setText("0%");
+		empSpinner.setSelection(0);
 		initDatePicker();
 	}
 

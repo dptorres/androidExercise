@@ -20,6 +20,7 @@
     <string name="wage">Hourly Wage</string>
     <string name="hours">Hours per month</string>
     <string name="bonus">Bonus</string>
+	<string name="percent">0%</string>
     
     <string-array name="employee_type">
         <item >@string/trainee</item>
