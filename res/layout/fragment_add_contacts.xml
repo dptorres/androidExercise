@@ -51,14 +51,19 @@
             android:layout_below="@+id/employeeLabelField"
             android:layout_marginTop="16dp" />
         
-        <RelativeLayout
+        <LinearLayout
 	        android:id="@+id/addFileds"
 	        android:layout_width="fill_parent"
 	        android:layout_height="fill_parent"
 	        android:layout_alignLeft="@+id/employeeSpinner"
             android:layout_below="@+id/employeeSpinner"
             android:layout_marginTop="16dp"
-	        android:orientation="vertical" />
+	        android:orientation="vertical">
+            
+            	<include layout="@layout/hourly_employee"/>
+            	
+            	<include layout="@layout/executive"/>
+            </LinearLayout>
         
         <TextView
             android:id="@+id/emailLabelField"

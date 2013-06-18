@@ -5,12 +5,12 @@ public class HourlyEmployee extends Employee{
 	private double wage;
 	private int hours;
 
-	public HourlyEmployee(String name, String eadd, String cellnum, String birthday, double income) {
-		super(name, eadd, cellnum, birthday, income);
+	public HourlyEmployee(String name, String eadd, String cellnum, String birthday, double income, int type) {
+		super(name, eadd, cellnum, birthday, income, type);
 	}
 	
-	public HourlyEmployee(String name, String eadd, String cellnum, String birthday, double income, double wage, int hours) {
-		super(name, eadd, cellnum, birthday, income);
+	public HourlyEmployee(String name, String eadd, String cellnum, String birthday, double income, int type, double wage, int hours) {
+		super(name, eadd, cellnum, birthday, income, type);
 		this.wage = wage;
 		this.hours = hours;
 	}

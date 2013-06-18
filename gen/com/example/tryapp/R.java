@@ -27,34 +27,38 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int addContactsView=0x7f09000a;
-        public static final int addFileds=0x7f09000f;
-        public static final int birthLabelField=0x7f090014;
+        public static final int addContactsView=0x7f09000b;
+        public static final int addFileds=0x7f090010;
+        public static final int birthLabelField=0x7f090015;
         public static final int birthday=0x7f090005;
-        public static final int bonusBar=0x7f090008;
-        public static final int bonusLabelField=0x7f090009;
-        public static final int cellNumField=0x7f090013;
-        public static final int cellNumLabelField=0x7f090012;
+        public static final int bonusBar=0x7f090009;
+        public static final int bonusLabelField=0x7f09000a;
+        public static final int cellNumField=0x7f090014;
+        public static final int cellNumLabelField=0x7f090013;
         public static final int cellnum=0x7f090004;
-        public static final int contact_item=0x7f09001a;
-        public static final int create_item=0x7f09001b;
-        public static final int dpBirthday=0x7f090015;
+        public static final int contact_item=0x7f09001e;
+        public static final int create_item=0x7f09001f;
+        public static final int delete=0x7f09001d;
+        public static final int dpBirthday=0x7f090016;
         public static final int eadd=0x7f090003;
-        public static final int emailField=0x7f090011;
-        public static final int emailLabelField=0x7f090010;
-        public static final int employeeLabelField=0x7f09000d;
-        public static final int employeeSpinner=0x7f09000e;
-        public static final int hoursField=0x7f090019;
-        public static final int hoursLabelField=0x7f090018;
+        public static final int edit=0x7f09001c;
+        public static final int emailField=0x7f090012;
+        public static final int emailLabelField=0x7f090011;
+        public static final int employeeLabelField=0x7f09000e;
+        public static final int employeeSpinner=0x7f09000f;
+        public static final int executiveContainer=0x7f090007;
+        public static final int hourlyEmployeeContainer=0x7f090018;
+        public static final int hoursField=0x7f09001b;
+        public static final int hoursLabelField=0x7f09001a;
         public static final int income=0x7f090006;
         public static final int listView=0x7f090001;
         public static final int name=0x7f090002;
-        public static final int nameField=0x7f09000c;
-        public static final int nameLabelField=0x7f09000b;
-        public static final int submitButton=0x7f090016;
+        public static final int nameField=0x7f09000d;
+        public static final int nameLabelField=0x7f09000c;
+        public static final int submitButton=0x7f090017;
         public static final int viewPager=0x7f090000;
-        public static final int wageField=0x7f090017;
-        public static final int wageLabelField=0x7f090007;
+        public static final int wageField=0x7f090019;
+        public static final int wageLabelField=0x7f090008;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -66,8 +70,9 @@ public final class R {
         public static final int hourly_employee=0x7f030006;
     }
     public static final class menu {
-        public static final int main=0x7f080000;
-        public static final int view_contacts=0x7f080001;
+        public static final int context_menu=0x7f080000;
+        public static final int main=0x7f080001;
+        public static final int view_contacts=0x7f080002;
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
@@ -77,6 +82,8 @@ public final class R {
         public static final int cellNumLabel=0x7f050005;
         public static final int contactLabel=0x7f050009;
         public static final int createLabel=0x7f050008;
+        public static final int delete=0x7f050015;
+        public static final int edit=0x7f050014;
         public static final int emailLabel=0x7f050004;
         public static final int employeeLabel=0x7f05000b;
         public static final int executive=0x7f05000e;

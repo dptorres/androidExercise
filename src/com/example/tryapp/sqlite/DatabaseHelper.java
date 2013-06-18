@@ -29,17 +29,17 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	private static final String TRAINEE_TABLE = "create table " + TRAINEE_DATA + "(" + COLUMN_ID + " integer primary key autoincrement, " +
 												   COLUMN_NAME + " text not null, " + COLUMN_EMAIL + " text not null, " 
 												   + COLUMN_CELLNUM + " text not null, " + COLUMN_BIRTHDAY + " text not null, "
-												   + COLUMN_INCOME + " double);";
+												   + COLUMN_INCOME + " double, " + COLUMN_TYPE + " integer);";
 	
 	private static final String HOURLY_EMP_TABLE = "create table " + HOURLY_EMP_DATA + "(" + COLUMN_ID + " integer primary key autoincrement, " +
 			   										COLUMN_NAME + " text not null, " + COLUMN_EMAIL + " text not null, " 
 												    + COLUMN_CELLNUM + " text not null, " + COLUMN_BIRTHDAY + " text not null, "
-												    + COLUMN_INCOME + " double, " + COLUMN_WAGE + " double, " + COLUMN_HOURS + " integer);";
+												    + COLUMN_INCOME + " double, " + COLUMN_TYPE + " integer, " + COLUMN_WAGE + " double, " + COLUMN_HOURS + " integer);";
 	
 	private static final String EXECUTIVE_TABLE = "create table " + EXECUTIVE_DATA + "(" + COLUMN_ID + " integer primary key autoincrement, " +
 												    COLUMN_NAME + " text not null, " + COLUMN_EMAIL + " text not null, " 
 												    + COLUMN_CELLNUM + " text not null, " + COLUMN_BIRTHDAY + " text not null, "
-												    + COLUMN_INCOME + " double, " + COLUMN_BONUS + " integer, " + COLUMN_TYPE + " integer);";
+												    + COLUMN_INCOME + " double, " + COLUMN_TYPE + " integer, " + COLUMN_BONUS + " integer);";
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
