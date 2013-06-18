@@ -329,11 +329,6 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 			double bonus = getEmployeeIncome(dbAdapter) * (double) bonusPercent.getInt(
 						   bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_BONUS)) / 100;
 			
-			System.out.println("bonus: " + bonusPercent.getInt(
-					   bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_BONUS)));
-			
-			System.out.println("Col Type: " + bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_TYPE)));
-			
 			if (bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_TYPE)) == 2) {
 				income = bonus + 20000;
 			} else {
