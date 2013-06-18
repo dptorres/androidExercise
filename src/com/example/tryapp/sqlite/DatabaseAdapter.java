@@ -47,25 +47,25 @@ public class DatabaseAdapter {
 		dbHelper.close();
 	}
 	
-	public long insertToTrainee(Employee data) {
+	public void insertToTrainee(Employee data) {
 	    ContentValues values = new ContentValues();
 	    createValues(data, values);
-	    return sqlDB.insert(DatabaseHelper.TRAINEE_DATA, null, values);
+	    sqlDB.insert(DatabaseHelper.TRAINEE_DATA, null, values);
 	}
 
-	public long insertToHourlyEmployee(HourlyEmployee data) {
+	public void insertToHourlyEmployee(HourlyEmployee data) {
 	    ContentValues values = new ContentValues();
 	    createValues(data, values);
 	    values.put(DatabaseHelper.COLUMN_WAGE, data.getWage());
 	    values.put(DatabaseHelper.COLUMN_HOURS, data.getHours());
-	    return sqlDB.insert(DatabaseHelper.HOURLY_EMP_DATA, null, values);
+	    sqlDB.insert(DatabaseHelper.HOURLY_EMP_DATA, null, values);
 	}
 	
-	public long insertToExecutive(Executive data) {
+	public void insertToExecutive(Executive data) {
 	    ContentValues values = new ContentValues();
 	    createValues(data, values);
 	    values.put(DatabaseHelper.COLUMN_BONUS, data.getPercent());
-	    return sqlDB.insert(DatabaseHelper.EXECUTIVE_DATA, null, values);
+	    sqlDB.insert(DatabaseHelper.EXECUTIVE_DATA, null, values);
 	}
 	
 	private void createValues(Employee data, ContentValues values) {

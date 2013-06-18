@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.database.MergeCursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -28,11 +27,13 @@ public class ViewContactsFragment extends Fragment{
 	private View view;
 	private Cursor[] cursors;
 	private ContactsAdapter adapter;
+	private AddContactsFragment contactsFragment;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_view_contacts, container, false);
 		
+		contactsFragment = new AddContactsFragment();
 		ListView list = (ListView) view.findViewById(R.id.listView);
 		dbAdapter = new DatabaseAdapter(this.getActivity());
 		adapter = new ContactsAdapter(this.getActivity(), readContent());
@@ -65,19 +66,16 @@ public class ViewContactsFragment extends Fragment{
 			Intent i = new Intent(getActivity(), EditActivity.class);  
 			i.putExtra("id", id);
 			i.putExtra("type", type);
-			Log.v("ViewContactFragment","ID: " + id);
-			Log.v("ViewContactFragment","TYPE: " + type);
 			dbAdapter.close();
 			startActivity(i);
 			
 			return true;
+			
 		case R.id.delete:
-			Log.v("ViewContactFragment","ID: " + id);
-			Log.v("ViewContactFragment","TYPE: " + type);
 			dbAdapter.deleteEntry(id, type);
+			contactsFragment.updateIncome(dbAdapter);
 			dbAdapter.close();
 			adapter.changeCursor(readContent());
-			
 			return true;
 			
 		default:

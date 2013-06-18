@@ -223,19 +223,10 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if(isEditMode) {
-			dbAdapter.openToWrite();
 			if(empSpinner.getSelectedItemPosition() == type) {	
-				if(type == 0) {
-					updateTrainee();
-				} else if (type == 1) {
-					updateHourlyEmp();
-				} else if (type == 2) {
-					updateExecutive();
-				} else {
-					updateShareholder();
-				}
-				dbAdapter.close();
+				insertToDatabase();
 			} else {	
+				dbAdapter.openToWrite();
 				dbAdapter.deleteEntry(id, type);
 				insertToDatabase();
 			}
@@ -249,60 +240,20 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		refreshFields();
 	}
 
-	private void updateShareholder() {
-		double bonus = (0.20 * getEmployeeIncome());
-
-		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
-							.toString(), getDate(), bonus, 3, 20);
-		
-		dbAdapter.updateExecutive(id, contact);
-	}
-
-	private void updateExecutive() {
-		double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome();
-		double income = bonus + 20000;
-		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
-						.toString(), getDate(), income, 2, bonusBar.getProgress());
-		
-		dbAdapter.updateExecutive(id, contact);
-		
-	}
-
-	private void updateHourlyEmp() {
-		double doubleWage = Double.parseDouble(wage.getText().toString());
-		int intHours = Integer.parseInt(hours.getText().toString());
-
-		HourlyEmployee contact = new HourlyEmployee(nameField.getText().toString(), emailField.getText().toString(), cellNumField
-								.getText().toString(), getDate(), (doubleWage * intHours), 1, doubleWage, intHours);
-		
-		dbAdapter.updateHourlyEmp(id, contact);
-		
-	}
-
-	private void updateTrainee() {
-		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), 
-						   cellNumField.getText().toString(), getDate(), 20000, 0);
-		dbAdapter.updateTrainee(id, contact);
-		
-	}
-
 	private void insertToDatabase() {
 		dbAdapter.openToWrite();
 
-		if (empSpinner.getSelectedItem().equals(
-				getResources().getString(R.string.trainee))) {
+		if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
 
 			insertTraineeToDB();
-			updateIncome();
+			updateIncome(dbAdapter);
 
-		} else if (empSpinner.getSelectedItem().equals(
-				getResources().getString(R.string.hourEmp))) {
+		} else if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
 
 			insertHourlyEmpToDB();
-			updateIncome();
+			updateIncome(dbAdapter);
 
-		} else if (empSpinner.getSelectedItem().equals(
-				getResources().getString(R.string.executive))) {
+		} else if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
 			insertExecutiveToDB();
 
 		} else {
@@ -315,59 +266,75 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 	}
 
 	private void insertShareholderToDB() {
-		double bonus = (0.20 * getEmployeeIncome());
+		double bonus = (0.20 * getEmployeeIncome(dbAdapter));
 
-		Executive contact = new Executive(nameField.getText().toString(),
-				emailField.getText().toString(), cellNumField.getText()
-						.toString(), getDate(), bonus, 3, 20);
+		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
+							.toString(), getDate(), bonus, 3, 20);
+		
+		if(isEditMode) {
+			dbAdapter.updateExecutive(id, contact);
+		} else {
+			dbAdapter.insertToExecutive(contact);
+		}
 
-		dbAdapter.insertToExecutive(contact);
 	}
 
 	private void insertExecutiveToDB() {
-		double bonus = ((double) bonusBar.getProgress() / 100)
-				* getEmployeeIncome();
+		double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome(dbAdapter);
 		double income = bonus + 20000;
-		Executive contact = new Executive(nameField.getText().toString(),
-				emailField.getText().toString(), cellNumField.getText()
-						.toString(), getDate(), income, 2,
-				bonusBar.getProgress());
-
-		dbAdapter.insertToExecutive(contact);
+		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
+						    .toString(), getDate(), income, 2, bonusBar.getProgress());
+		
+		if(isEditMode) {
+			dbAdapter.updateExecutive(id, contact);
+		} else {
+			dbAdapter.insertToExecutive(contact);
+		}
+		
 	}
 
 	private void insertHourlyEmpToDB() {
 		double doubleWage = Double.parseDouble(wage.getText().toString());
 		int intHours = Integer.parseInt(hours.getText().toString());
 
-		HourlyEmployee contact = new HourlyEmployee(nameField.getText()
-				.toString(), emailField.getText().toString(), cellNumField
-				.getText().toString(), getDate(), (doubleWage * intHours), 1,
-				doubleWage, intHours);
+		HourlyEmployee contact = new HourlyEmployee(nameField.getText().toString(), emailField.getText().toString(), cellNumField
+								.getText().toString(), getDate(), (doubleWage * intHours), 1, doubleWage, intHours);
 
-		dbAdapter.insertToHourlyEmployee(contact);
+		if(isEditMode) {
+			dbAdapter.updateHourlyEmp(id, contact);
+		} else {
+			dbAdapter.insertToHourlyEmployee(contact);
+		}
+		
 	}
 
 	private void insertTraineeToDB() {
-		Employee contact = new Employee(nameField.getText().toString(),
-				emailField.getText().toString(), cellNumField.getText()
-						.toString(), getDate(), 20000, 0);
-
-		dbAdapter.insertToTrainee(contact);
+		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
+						  .toString(), getDate(), 20000, 0);
+		
+		if(isEditMode) {
+			dbAdapter.updateTrainee(id, contact);
+		} else {
+			dbAdapter.insertToTrainee(contact);
+		}
+		
 	}
 
-	private void updateIncome() {
-
+	public void updateIncome(DatabaseAdapter dbAdapter) {
 		Cursor bonusPercent = dbAdapter.getBonusPercentage();
 		bonusPercent.moveToFirst();
 
 		while (!bonusPercent.isAfterLast()) {
 			double income = 0;
-			double bonus = getEmployeeIncome()
-					* (double) bonusPercent.getInt(bonusPercent
-							.getColumnIndex(DatabaseHelper.COLUMN_BONUS)) / 100;
-			if (bonusPercent.getInt(bonusPercent
-					.getColumnIndex(DatabaseHelper.COLUMN_TYPE)) == 0) {
+			double bonus = getEmployeeIncome(dbAdapter) * (double) bonusPercent.getInt(
+						   bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_BONUS)) / 100;
+			
+			System.out.println("bonus: " + bonusPercent.getInt(
+					   bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_BONUS)));
+			
+			System.out.println("Col Type: " + bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_TYPE)));
+			
+			if (bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_TYPE)) == 2) {
 				income = bonus + 20000;
 			} else {
 				income = bonus;
@@ -379,18 +346,18 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 			bonusPercent.moveToNext();
 		}
 
+		dbAdapter.close();
 	}
 
-	private double getEmployeeIncome() {
+	private double getEmployeeIncome(DatabaseAdapter dbAdapter) {
 		double dIncome = 0;
 
 		Cursor traineeIncome = dbAdapter.getTraineeIncome();
 		traineeIncome.moveToFirst();
 
 		while (!traineeIncome.isAfterLast()) {
-			dIncome = dIncome
-					+ traineeIncome.getDouble(traineeIncome
-							.getColumnIndex(DatabaseHelper.COLUMN_INCOME));
+			dIncome = dIncome + traineeIncome.getDouble(traineeIncome
+					  .getColumnIndex(DatabaseHelper.COLUMN_INCOME));
 			traineeIncome.moveToNext();
 		}
 
@@ -398,9 +365,8 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		hourlyEmpIncome.moveToFirst();
 
 		while (!hourlyEmpIncome.isAfterLast()) {
-			dIncome = dIncome
-					+ hourlyEmpIncome.getDouble(hourlyEmpIncome
-							.getColumnIndex(DatabaseHelper.COLUMN_INCOME));
+			dIncome = dIncome + hourlyEmpIncome.getDouble(hourlyEmpIncome
+					 .getColumnIndex(DatabaseHelper.COLUMN_INCOME));
 			hourlyEmpIncome.moveToNext();
 		}
 		return dIncome;
