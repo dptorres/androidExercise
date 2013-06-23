@@ -41,12 +41,15 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 	private EditText cellNumField;
 	private EditText wage;
 	private EditText hours;
+	private EditText income;
 	private Spinner empSpinner;
 	private SeekBar bonusBar;
 	private DatabaseAdapter dbAdapter;
 	private View hoursView;
 	private View bonusView;
+	private View incomeView;
 	private boolean isEditMode;
+	private boolean toUpdate;
 	private int id;
 	private int type;
 
@@ -58,10 +61,10 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_add_contacts, container, false);
 		isEditMode = false;
+		toUpdate = false;
 		initFields();
 		initDatePicker();
 		initSpinner();
@@ -74,36 +77,42 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 
-	private void initIfEditActivity() {
+	private void initIfEditActivity() {			//OKAY
 		id = getActivity().getIntent().getIntExtra("id", -1);
 		type = getActivity().getIntent().getIntExtra("type", -1);
 		
 		if (id != -1 && type != -1) { 
 			isEditMode = true;
+			toUpdate = true;
 			dbAdapter.openToRead();
 			Cursor employeeData = dbAdapter.getEmployeeData(id, type);
 			employeeData.moveToFirst();
 			if(type == 0) {
 				editEmployee(employeeData);
+				income.setText(String.valueOf(employeeData.getDouble(employeeData.getColumnIndex(DatabaseHelper.COLUMN_INCOME))));
 			} else if (type == 1) {
 				editEmployee(employeeData);
 				empSpinner.setSelection(1);
-				wage.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_WAGE)));
-				hours.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_HOURS)));
 			} else if (type == 2) {
 				editEmployee(employeeData);
 				empSpinner.setSelection(2);
+				wage.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_WAGE)));
+				hours.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_HOURS)));
+			} else if (type == 3) {
+				editEmployee(employeeData);
+				income.setText(String.valueOf(employeeData.getDouble(employeeData.getColumnIndex(DatabaseHelper.COLUMN_SALARY))));
+				empSpinner.setSelection(3);
 				bonusBar.setProgress(employeeData.getInt(employeeData.getColumnIndex(DatabaseHelper.COLUMN_BONUS)));
 			} else {
 				editEmployee(employeeData);
-				empSpinner.setSelection(3);
+				empSpinner.setSelection(4);
 			}
 			dbAdapter.close();
 			
 		}
 	}
 
-	private void editEmployee(Cursor employeeData) {
+	private void editEmployee(Cursor employeeData) {			//OKAY
 		nameField.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
 		emailField.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_EMAIL)));
 		cellNumField.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_CELLNUM)));
@@ -125,24 +134,27 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void initFields() {
+	private void initFields() {							//OKAY
 		nameField = (EditText) view.findViewById(R.id.nameField);
 		emailField = (EditText) view.findViewById(R.id.emailField);
 		cellNumField = (EditText) view.findViewById(R.id.cellNumField);
 		empSpinner = (Spinner) view.findViewById(R.id.employeeSpinner);
 		dpBirth = (DatePicker) view.findViewById(R.id.dpBirthday);
-
+		
+		incomeView = view.findViewById(R.id.regularEmployeeContainer);
+		income = (EditText) incomeView.findViewById(R.id.incomeField);
+		
 		hoursView = view.findViewById(R.id.hourlyEmployeeContainer);
 		wage = (EditText) hoursView.findViewById(R.id.wageField);
 		hours = (EditText) hoursView.findViewById(R.id.hoursField);
 		
-		bonusView = view.findViewById(R.id.executiveContainer);
+		bonusView = incomeView.findViewById(R.id.executiveContainer);
 		bonusBar = (SeekBar) bonusView.findViewById(R.id.bonusBar);
 		bonusBar.setIndeterminate(false);
 		bonusBar.setOnSeekBarChangeListener(seekBarListener(bonusView));
 	}
 
-	private void initSpinner() {
+	private void initSpinner() {						//OKAY
 		ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter
 				.createFromResource(this.getActivity(), R.array.employee_type,
 						android.R.layout.simple_spinner_item);
@@ -155,23 +167,28 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 	}
 
 	// inflate additional fields for hourly employees and executives
-	private OnItemSelectedListener spinnerListener() {
+	private OnItemSelectedListener spinnerListener() {		//OKAY
 		OnItemSelectedListener selected = new OnItemSelectedListener() {
 
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int pos, long id) {
-				if (pos == 0) {
+				if (pos == 0) {				//Regular
+					incomeView.setVisibility(View.VISIBLE);
 					bonusView.setVisibility(View.GONE);
 					hoursView.setVisibility(View.GONE);
-				} else if (pos == 1) {
-					bonusView.setVisibility(View.GONE);
+				} else if (pos == 1) {		//Trainee
+					incomeView.setVisibility(View.GONE);
+					hoursView.setVisibility(View.GONE);
+				} else if (pos == 2) {		//Hourly Employee
+					incomeView.setVisibility(View.GONE);
 					hoursView.setVisibility(View.VISIBLE);
-				} else if (pos == 2) {
+				} else if (pos == 3) {		//Executive
+					incomeView.setVisibility(View.VISIBLE);
 					bonusView.setVisibility(View.VISIBLE);
 					hoursView.setVisibility(View.GONE);
-				} else if (pos == 3) {
-					bonusView.setVisibility(View.GONE);
+				} else if (pos == 4) {		//Shareholder
+					incomeView.setVisibility(View.GONE);
 					hoursView.setVisibility(View.GONE);
 				}
 			}
@@ -185,9 +202,8 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return selected;
 	}
 
-	private OnSeekBarChangeListener seekBarListener(View bonusView) {
-		final TextView bonusField = (TextView) bonusView
-				.findViewById(R.id.bonusLabelField);
+	private OnSeekBarChangeListener seekBarListener(View bonusView) {		//OKAY
+		final TextView bonusField = (TextView) bonusView.findViewById(R.id.bonusLabelField);
 
 		OnSeekBarChangeListener seekBar = new OnSeekBarChangeListener() {
 
@@ -208,7 +224,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return seekBar;
 	}
 
-	private void initDatePicker() {
+	private void initDatePicker() {				//OKAY
 
 		final Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
@@ -221,11 +237,14 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	// Submit button listener
 	@Override
-	public void onClick(View v) {
+	public void onClick(View v) {				//OKAY
 		if(isEditMode) {
 			if(empSpinner.getSelectedItemPosition() == type) {	
+				toUpdate = true;
 				insertToDatabase();
 			} else {	
+				toUpdate = false;
+				System.out.println("New Type! \nprev type is: " + type + " new type is: " + empSpinner.getSelectedItemPosition());
 				dbAdapter.openToWrite();
 				dbAdapter.deleteEntry(id, type);
 				insertToDatabase();
@@ -240,23 +259,26 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		refreshFields();
 	}
 
-	private void insertToDatabase() {
+	private void insertToDatabase() {				//OKAY
 		dbAdapter.openToWrite();
-
-		if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
-
+		
+		if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.regular)) 
+				|| empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
+			System.out.println("Entered regular / trainee realm. Wuahahaha.");
 			insertTraineeToDB();
 			updateIncome(dbAdapter);
 
 		} else if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
-
+			System.out.println("Entered hourly emp realm. It's dark here. Emgee.");
 			insertHourlyEmpToDB();
 			updateIncome(dbAdapter);
 
 		} else if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
+			System.out.println("Entered executive realm. So corporate.");
 			insertExecutiveToDB();
 
 		} else {
+			System.out.println("Entered shareholder realm. Share share din.");
 			insertShareholderToDB();
 
 		}
@@ -265,13 +287,13 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	}
 
-	private void insertShareholderToDB() {
-		double bonus = (0.20 * getEmployeeIncome(dbAdapter));
+	private void insertShareholderToDB() {					//OKAY
+		double dIncome = (0.20 * getEmployeeIncome(dbAdapter));
 
 		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
-							.toString(), getDate(), bonus, 3, 20);
+							.toString(), getDate(), dIncome, 4, 20, 0);
 		
-		if(isEditMode) {
+		if(toUpdate) {
 			dbAdapter.updateExecutive(id, contact);
 		} else {
 			dbAdapter.insertToExecutive(contact);
@@ -279,13 +301,14 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	}
 
-	private void insertExecutiveToDB() {
+	private void insertExecutiveToDB() {					//OKAY							
 		double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome(dbAdapter);
-		double income = bonus + 20000;
+		double dIncome = Double.parseDouble(income.getText().toString());
+		double salary = bonus + dIncome;
 		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
-						    .toString(), getDate(), income, 2, bonusBar.getProgress());
+						    .toString(), getDate(), salary, 3, bonusBar.getProgress(), dIncome);
 		
-		if(isEditMode) {
+		if(toUpdate) {
 			dbAdapter.updateExecutive(id, contact);
 		} else {
 			dbAdapter.insertToExecutive(contact);
@@ -293,14 +316,14 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		
 	}
 
-	private void insertHourlyEmpToDB() {
+	private void insertHourlyEmpToDB() {					//OKAY
 		double doubleWage = Double.parseDouble(wage.getText().toString());
 		int intHours = Integer.parseInt(hours.getText().toString());
 
 		HourlyEmployee contact = new HourlyEmployee(nameField.getText().toString(), emailField.getText().toString(), cellNumField
-								.getText().toString(), getDate(), (doubleWage * intHours), 1, doubleWage, intHours);
+								.getText().toString(), getDate(), (doubleWage * intHours), 2, doubleWage, intHours);
 
-		if(isEditMode) {
+		if(toUpdate) {
 			dbAdapter.updateHourlyEmp(id, contact);
 		} else {
 			dbAdapter.insertToHourlyEmployee(contact);
@@ -308,11 +331,22 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		
 	}
 
-	private void insertTraineeToDB() {
-		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
-						  .toString(), getDate(), 20000, 0);
+	private void insertTraineeToDB() {							//OKAY
+		double dIncome = 0;
+		int iType;
 		
-		if(isEditMode) {
+		if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.regular))) {
+			dIncome = Double.parseDouble(income.getText().toString()); 
+			iType = 0;
+		} else {
+			dIncome = 20000;
+			iType = 1;
+		}
+		
+		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
+						  .toString(), getDate(), dIncome, iType);
+		
+		if(toUpdate) {			//BUG IS HERE. WOHEM.
 			dbAdapter.updateTrainee(id, contact);
 		} else {
 			dbAdapter.insertToTrainee(contact);
@@ -320,23 +354,18 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		
 	}
 
-	public void updateIncome(DatabaseAdapter dbAdapter) {
+	public void updateIncome(DatabaseAdapter dbAdapter) {			//OKAY
 		Cursor bonusPercent = dbAdapter.getBonusPercentage();
 		bonusPercent.moveToFirst();
 
 		while (!bonusPercent.isAfterLast()) {
-			double income = 0;
+			double dIncome = 0;
 			double bonus = getEmployeeIncome(dbAdapter) * (double) bonusPercent.getInt(
 						   bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_BONUS)) / 100;
 			
-			if (bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_TYPE)) == 2) {
-				income = bonus + 20000;
-			} else {
-				income = bonus;
-			}
+			dIncome = bonus + bonusPercent.getDouble(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_SALARY));
 
-			dbAdapter.updateIncome(income, bonusPercent.getInt(bonusPercent
-					.getColumnIndex(DatabaseHelper.COLUMN_ID)));
+			dbAdapter.updateIncome(dIncome, bonusPercent.getInt(bonusPercent.getColumnIndex(DatabaseHelper.COLUMN_ID)));
 
 			bonusPercent.moveToNext();
 		}
@@ -344,7 +373,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		dbAdapter.close();
 	}
 
-	private double getEmployeeIncome(DatabaseAdapter dbAdapter) {
+	private double getEmployeeIncome(DatabaseAdapter dbAdapter) {			//OKAY
 		double dIncome = 0;
 
 		Cursor traineeIncome = dbAdapter.getTraineeIncome();
@@ -367,16 +396,17 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return dIncome;
 	}
 
-	private void refreshFields() {
+	private void refreshFields() {			//OKAY
+		empSpinner.setSelection(0);
 		nameField.setText("");
 		emailField.setText("");
 		cellNumField.setText("");
-		empSpinner.setSelection(0);
+		income.setText("");
 		initDatePicker();
 	}
 
 	@SuppressLint("NewApi")
-	private String getDate() {
+	private String getDate() {				//OKAY
 		return DateFormat.getDateInstance().format(
 				dpBirth.getCalendarView().getDate());
 	}

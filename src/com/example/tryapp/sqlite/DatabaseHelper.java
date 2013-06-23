@@ -21,6 +21,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	public static final String COLUMN_HOURS = "hours";
 	public static final String COLUMN_BONUS = "bonus";
 	public static final String COLUMN_TYPE = "type";
+	public static final String COLUMN_SALARY = "salary";
 	
 	
 	private static final String DATABASE_NAME = "data.db";
@@ -39,7 +40,8 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	private static final String EXECUTIVE_TABLE = "create table " + EXECUTIVE_DATA + "(" + COLUMN_ID + " integer primary key autoincrement, " +
 												    COLUMN_NAME + " text not null, " + COLUMN_EMAIL + " text not null, " 
 												    + COLUMN_CELLNUM + " text not null, " + COLUMN_BIRTHDAY + " text not null, "
-												    + COLUMN_INCOME + " double, " + COLUMN_TYPE + " integer, " + COLUMN_BONUS + " integer);";
+												    + COLUMN_INCOME + " double, " + COLUMN_TYPE + " integer, " + COLUMN_BONUS + " integer, "
+												    + COLUMN_SALARY + " double);";
 
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);

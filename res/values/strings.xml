@@ -13,6 +13,7 @@
     <string name="contactLabel">Contacts</string>
     <string name="title_activity_view_contacts">ViewContactsActivity</string>
     <string name="employeeLabel">Employee Type</string>
+    <string name="regular">Regular</string>
     <string name="trainee">Trainee</string>
     <string name="hourEmp">Hourly Employee</string>
     <string name="executive">Executive</string>
@@ -23,8 +24,10 @@
 	<string name="percent">0%</string>
 	<string name="edit">Edit</string>
 	<string name="delete">Delete</string>
-    
+    <string name="income">Income</string>
+	
     <string-array name="employee_type">
+        <item >@string/regular</item>
         <item >@string/trainee</item>
         <item >@string/hourEmp</item>
         <item >@string/executive</item>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/regularEmployeeContainer"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    android:visibility="visible"
+    android:animateLayoutChanges="true">
+
+	<TextView 
+        android:id="@+id/incomeLabelField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="@string/income"/>
+
+    <EditText
+        android:id="@+id/incomeField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/incomeLabelField"
+        android:layout_below="@+id/incomeLabelField"
+        android:ems="10"
+        android:inputType="numberDecimal" />
+    
+    <LinearLayout
+        android:id="@+id/addExecutive"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignLeft="@+id/incomeField"
+        android:layout_below="@+id/incomeField"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+		<include layout="@layout/executive"/>
+        	
+        </LinearLayout>
+
+
+</RelativeLayout>

@@ -24,7 +24,7 @@ public class DatabaseAdapter {
 	
 	private String[] allExecutiveColumns = {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_NAME, DatabaseHelper.COLUMN_EMAIL, 
 								   DatabaseHelper.COLUMN_CELLNUM, DatabaseHelper.COLUMN_BIRTHDAY, DatabaseHelper.COLUMN_INCOME, 
-								   DatabaseHelper.COLUMN_TYPE, DatabaseHelper.COLUMN_BONUS};
+								   DatabaseHelper.COLUMN_TYPE, DatabaseHelper.COLUMN_BONUS, DatabaseHelper.COLUMN_SALARY};
 	
 	private Context context;
 	
@@ -65,6 +65,7 @@ public class DatabaseAdapter {
 	    ContentValues values = new ContentValues();
 	    createValues(data, values);
 	    values.put(DatabaseHelper.COLUMN_BONUS, data.getPercent());
+	    values.put(DatabaseHelper.COLUMN_SALARY, data.getSalary());
 	    sqlDB.insert(DatabaseHelper.EXECUTIVE_DATA, null, values);
 	}
 	
@@ -84,9 +85,9 @@ public class DatabaseAdapter {
 	}
 	
 	public void deleteEntry(int id, int type) {
-		if(type == 0) {
+		if(type == 0 || type == 1) {
 			sqlDB.delete(DatabaseHelper.TRAINEE_DATA, DatabaseHelper.COLUMN_ID + "=" + id, null);
-		} else if (type == 1) {
+		} else if (type == 2) {
 			sqlDB.delete(DatabaseHelper.HOURLY_EMP_DATA, DatabaseHelper.COLUMN_ID + "=" + id, null);
 		} else {
 			sqlDB.delete(DatabaseHelper.EXECUTIVE_DATA, DatabaseHelper.COLUMN_ID + "=" + id, null);
@@ -95,10 +96,10 @@ public class DatabaseAdapter {
 	}
 	
 	public Cursor getEmployeeData(int id, int type) {
-		if(type == 0) {
+		if(type == 0 || type == 1) {
 			return sqlDB.query(DatabaseHelper.TRAINEE_DATA, allColumns, DatabaseHelper.COLUMN_ID + "=" + id, 
 					null, null, null, null);
-		} else if(type == 1) {
+		} else if(type == 2) {
 			return sqlDB.query(DatabaseHelper.HOURLY_EMP_DATA, allHourlyEmpColumns, DatabaseHelper.COLUMN_ID + "=" + id, 
 					null, null, null, null);
 		} else {
@@ -126,6 +127,7 @@ public class DatabaseAdapter {
 		ContentValues values = new ContentValues();
 	    createValues(data, values);
 	    values.put(DatabaseHelper.COLUMN_BONUS, data.getPercent());
+	    values.put(DatabaseHelper.COLUMN_SALARY, data.getSalary());
 	    sqlDB.update(DatabaseHelper.EXECUTIVE_DATA, values, DatabaseHelper.COLUMN_ID + "=" + id, null);
 	}
 	
@@ -151,7 +153,7 @@ public class DatabaseAdapter {
 
 	public Cursor getBonusPercentage() {
 		return sqlDB.query(DatabaseHelper.EXECUTIVE_DATA, new String[] {DatabaseHelper.COLUMN_ID, DatabaseHelper.COLUMN_BONUS, 
-						   DatabaseHelper.COLUMN_TYPE},null, null, null, null, null);
+				DatabaseHelper.COLUMN_SALARY, DatabaseHelper.COLUMN_TYPE},null, null, null, null, null);
 	}
 
 }

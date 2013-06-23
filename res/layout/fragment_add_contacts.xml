@@ -59,10 +59,10 @@
             android:layout_below="@+id/employeeSpinner"
             android:layout_marginTop="16dp"
 	        android:orientation="vertical">
-            
+
+            	<include layout="@layout/regular"/>
             	<include layout="@layout/hourly_employee"/>
             	
-            	<include layout="@layout/executive"/>
             </LinearLayout>
         
         <TextView

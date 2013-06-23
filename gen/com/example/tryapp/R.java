@@ -28,6 +28,7 @@ public final class R {
     }
     public static final class id {
         public static final int addContactsView=0x7f09000b;
+        public static final int addExecutive=0x7f09001f;
         public static final int addFileds=0x7f090010;
         public static final int birthLabelField=0x7f090015;
         public static final int birthday=0x7f090005;
@@ -36,12 +37,12 @@ public final class R {
         public static final int cellNumField=0x7f090014;
         public static final int cellNumLabelField=0x7f090013;
         public static final int cellnum=0x7f090004;
-        public static final int contact_item=0x7f09001e;
-        public static final int create_item=0x7f09001f;
-        public static final int delete=0x7f09001d;
+        public static final int contact_item=0x7f090022;
+        public static final int create_item=0x7f090023;
+        public static final int delete=0x7f090021;
         public static final int dpBirthday=0x7f090016;
         public static final int eadd=0x7f090003;
-        public static final int edit=0x7f09001c;
+        public static final int edit=0x7f090020;
         public static final int emailField=0x7f090012;
         public static final int emailLabelField=0x7f090011;
         public static final int employeeLabelField=0x7f09000e;
@@ -51,10 +52,13 @@ public final class R {
         public static final int hoursField=0x7f09001b;
         public static final int hoursLabelField=0x7f09001a;
         public static final int income=0x7f090006;
+        public static final int incomeField=0x7f09001e;
+        public static final int incomeLabelField=0x7f09001d;
         public static final int listView=0x7f090001;
         public static final int name=0x7f090002;
         public static final int nameField=0x7f09000d;
         public static final int nameLabelField=0x7f09000c;
+        public static final int regularEmployeeContainer=0x7f09001c;
         public static final int submitButton=0x7f090017;
         public static final int viewPager=0x7f090000;
         public static final int wageField=0x7f090019;
@@ -68,6 +72,7 @@ public final class R {
         public static final int fragment_add_contacts=0x7f030004;
         public static final int fragment_view_contacts=0x7f030005;
         public static final int hourly_employee=0x7f030006;
+        public static final int regular=0x7f030007;
     }
     public static final class menu {
         public static final int context_menu=0x7f080000;
@@ -78,25 +83,27 @@ public final class R {
         public static final int action_settings=0x7f050001;
         public static final int app_name=0x7f050000;
         public static final int birthLabel=0x7f050006;
-        public static final int bonus=0x7f050012;
+        public static final int bonus=0x7f050013;
         public static final int cellNumLabel=0x7f050005;
         public static final int contactLabel=0x7f050009;
         public static final int createLabel=0x7f050008;
-        public static final int delete=0x7f050015;
-        public static final int edit=0x7f050014;
+        public static final int delete=0x7f050016;
+        public static final int edit=0x7f050015;
         public static final int emailLabel=0x7f050004;
         public static final int employeeLabel=0x7f05000b;
-        public static final int executive=0x7f05000e;
+        public static final int executive=0x7f05000f;
         public static final int hello_world=0x7f050002;
-        public static final int hourEmp=0x7f05000d;
-        public static final int hours=0x7f050011;
+        public static final int hourEmp=0x7f05000e;
+        public static final int hours=0x7f050012;
+        public static final int income=0x7f050017;
         public static final int nameLabel=0x7f050003;
-        public static final int percent=0x7f050013;
-        public static final int shareholder=0x7f05000f;
+        public static final int percent=0x7f050014;
+        public static final int regular=0x7f05000c;
+        public static final int shareholder=0x7f050010;
         public static final int submitButton=0x7f050007;
         public static final int title_activity_view_contacts=0x7f05000a;
-        public static final int trainee=0x7f05000c;
-        public static final int wage=0x7f050010;
+        public static final int trainee=0x7f05000d;
+        public static final int wage=0x7f050011;
     }
     public static final class style {
         /** 
