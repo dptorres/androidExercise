@@ -77,7 +77,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 
-	private void initIfEditActivity() {			//OKAY
+	private void initIfEditActivity() {			
 		id = getActivity().getIntent().getIntExtra("id", -1);
 		type = getActivity().getIntent().getIntExtra("type", -1);
 		
@@ -112,7 +112,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void editEmployee(Cursor employeeData) {			//OKAY
+	private void editEmployee(Cursor employeeData) {			
 		nameField.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_NAME)));
 		emailField.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_EMAIL)));
 		cellNumField.setText(employeeData.getString(employeeData.getColumnIndex(DatabaseHelper.COLUMN_CELLNUM)));
@@ -134,7 +134,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void initFields() {							//OKAY
+	private void initFields() {							
 		nameField = (EditText) view.findViewById(R.id.nameField);
 		emailField = (EditText) view.findViewById(R.id.emailField);
 		cellNumField = (EditText) view.findViewById(R.id.cellNumField);
@@ -154,7 +154,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		bonusBar.setOnSeekBarChangeListener(seekBarListener(bonusView));
 	}
 
-	private void initSpinner() {						//OKAY
+	private void initSpinner() {						
 		ArrayAdapter<CharSequence> spinAdapter = ArrayAdapter
 				.createFromResource(this.getActivity(), R.array.employee_type,
 						android.R.layout.simple_spinner_item);
@@ -167,7 +167,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 	}
 
 	// inflate additional fields for hourly employees and executives
-	private OnItemSelectedListener spinnerListener() {		//OKAY
+	private OnItemSelectedListener spinnerListener() {		
 		OnItemSelectedListener selected = new OnItemSelectedListener() {
 
 			@Override
@@ -202,7 +202,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return selected;
 	}
 
-	private OnSeekBarChangeListener seekBarListener(View bonusView) {		//OKAY
+	private OnSeekBarChangeListener seekBarListener(View bonusView) {		
 		final TextView bonusField = (TextView) bonusView.findViewById(R.id.bonusLabelField);
 
 		OnSeekBarChangeListener seekBar = new OnSeekBarChangeListener() {
@@ -224,7 +224,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return seekBar;
 	}
 
-	private void initDatePicker() {				//OKAY
+	private void initDatePicker() {				
 
 		final Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
@@ -237,14 +237,13 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	// Submit button listener
 	@Override
-	public void onClick(View v) {				//OKAY
+	public void onClick(View v) {			
 		if(isEditMode) {
 			if(empSpinner.getSelectedItemPosition() == type) {	
 				toUpdate = true;
 				insertToDatabase();
 			} else {	
 				toUpdate = false;
-				System.out.println("New Type! \nprev type is: " + type + " new type is: " + empSpinner.getSelectedItemPosition());
 				dbAdapter.openToWrite();
 				dbAdapter.deleteEntry(id, type);
 				insertToDatabase();
@@ -259,26 +258,22 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		refreshFields();
 	}
 
-	private void insertToDatabase() {				//OKAY
+	private void insertToDatabase() {			
 		dbAdapter.openToWrite();
 		
 		if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.regular)) 
 				|| empSpinner.getSelectedItem().equals(getResources().getString(R.string.trainee))) {
-			System.out.println("Entered regular / trainee realm. Wuahahaha.");
 			insertTraineeToDB();
 			updateIncome(dbAdapter);
 
 		} else if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.hourEmp))) {
-			System.out.println("Entered hourly emp realm. It's dark here. Emgee.");
 			insertHourlyEmpToDB();
 			updateIncome(dbAdapter);
 
 		} else if (empSpinner.getSelectedItem().equals(getResources().getString(R.string.executive))) {
-			System.out.println("Entered executive realm. So corporate.");
 			insertExecutiveToDB();
 
 		} else {
-			System.out.println("Entered shareholder realm. Share share din.");
 			insertShareholderToDB();
 
 		}
@@ -287,7 +282,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	}
 
-	private void insertShareholderToDB() {					//OKAY
+	private void insertShareholderToDB() {					
 		double dIncome = (0.20 * getEmployeeIncome(dbAdapter));
 
 		Executive contact = new Executive(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
@@ -301,7 +296,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 
 	}
 
-	private void insertExecutiveToDB() {					//OKAY							
+	private void insertExecutiveToDB() {											
 		double bonus = ((double) bonusBar.getProgress() / 100) * getEmployeeIncome(dbAdapter);
 		double dIncome = Double.parseDouble(income.getText().toString());
 		double salary = bonus + dIncome;
@@ -316,7 +311,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		
 	}
 
-	private void insertHourlyEmpToDB() {					//OKAY
+	private void insertHourlyEmpToDB() {					
 		double doubleWage = Double.parseDouble(wage.getText().toString());
 		int intHours = Integer.parseInt(hours.getText().toString());
 
@@ -331,7 +326,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		
 	}
 
-	private void insertTraineeToDB() {							//OKAY
+	private void insertTraineeToDB() {							
 		double dIncome = 0;
 		int iType;
 		
@@ -346,7 +341,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		Employee contact = new Employee(nameField.getText().toString(), emailField.getText().toString(), cellNumField.getText()
 						  .toString(), getDate(), dIncome, iType);
 		
-		if(toUpdate) {			//BUG IS HERE. WOHEM.
+		if(toUpdate) {			
 			dbAdapter.updateTrainee(id, contact);
 		} else {
 			dbAdapter.insertToTrainee(contact);
@@ -354,7 +349,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		
 	}
 
-	public void updateIncome(DatabaseAdapter dbAdapter) {			//OKAY
+	public void updateIncome(DatabaseAdapter dbAdapter) {			
 		Cursor bonusPercent = dbAdapter.getBonusPercentage();
 		bonusPercent.moveToFirst();
 
@@ -373,7 +368,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		dbAdapter.close();
 	}
 
-	private double getEmployeeIncome(DatabaseAdapter dbAdapter) {			//OKAY
+	private double getEmployeeIncome(DatabaseAdapter dbAdapter) {			
 		double dIncome = 0;
 
 		Cursor traineeIncome = dbAdapter.getTraineeIncome();
@@ -396,7 +391,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 		return dIncome;
 	}
 
-	private void refreshFields() {			//OKAY
+	private void refreshFields() {			
 		empSpinner.setSelection(0);
 		nameField.setText("");
 		emailField.setText("");
@@ -406,7 +401,7 @@ public class AddContactsFragment extends Fragment implements OnClickListener {
 	}
 
 	@SuppressLint("NewApi")
-	private String getDate() {				//OKAY
+	private String getDate() {				
 		return DateFormat.getDateInstance().format(
 				dpBirth.getCalendarView().getDate());
 	}

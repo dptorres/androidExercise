@@ -20,16 +20,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter{
 	public int getCount() {
 		return this.fragments.size();
 	}
-	
-//	 public Fragment getItem(int i) {
-//	        Fragment fragment = new DemoObjectFragment();
-//	        Bundle args = new Bundle();
-//	        // Our object is just an integer :-P
-//	        args.putInt(DemoObjectFragment.ARG_OBJECT, i + 1);
-//	        fragment.setArguments(args);
-//	        return fragment;
-//	    }
-
 
 	@Override
 	public Fragment getItem(int pos) {
